@@ -15,5 +15,5 @@ public class User {
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)
-    private boolean isVerified;
+    private boolean verified;
 }

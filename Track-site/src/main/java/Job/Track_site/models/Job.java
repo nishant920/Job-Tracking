@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -21,10 +20,8 @@ public class Job {
     private User user;
     @Column(nullable = false)
     private String profile;
-
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @Column(nullable = false)
+    private String company;
     @Column(nullable = false)
     private Double salary;
 
