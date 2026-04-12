@@ -1,14 +1,13 @@
 package Job.Track_site.controller;
 
 import Job.Track_site.dto.JobDto;
+import Job.Track_site.dto.JobStatusDto;
+import Job.Track_site.enums.Status;
 import Job.Track_site.models.Job;
 import Job.Track_site.service.JobService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/job")
@@ -23,5 +22,9 @@ public class JobController {
       return new ResponseEntity<Job>(job, HttpStatus.CREATED);
     }
 
-
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Job> updateJobStatus(@PathVariable Long id,  @RequestBody JobStatusDto jobStatusDto){
+        Job updatedJob = jobService.updateStatus(id, jobStatusDto);
+        return new ResponseEntity<>(updatedJob, HttpStatus.OK);
+    }
 }

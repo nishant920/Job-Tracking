@@ -1,6 +1,7 @@
 package Job.Track_site.utility;
 
 import Job.Track_site.dto.JobDto;
+import Job.Track_site.dto.JobStatusDto;
 import Job.Track_site.dto.UserDto;
 import Job.Track_site.models.Job;
 import Job.Track_site.models.User;
