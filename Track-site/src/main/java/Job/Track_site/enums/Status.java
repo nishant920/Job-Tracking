@@ -4,5 +4,6 @@ public enum Status {
     APPLIED,
     REJECTED,
     INTERVIEWED,
+    NO_RESPONSE,
     OFFER
 }
