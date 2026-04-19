@@ -1,5 +1,6 @@
 package Job.Track_site.models;
 
+import Job.Track_site.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,4 +17,8 @@ public class User {
     private String email;
     @Column(nullable = false)
     private boolean verified;
+    @Column(nullable = false)
+    private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

@@ -1,15 +1,14 @@
 package Job.Track_site.controller;
 
 
+import Job.Track_site.dto.LoginDto;
 import Job.Track_site.dto.UserDto;
+import Job.Track_site.exceptions.InvalidCredentials;
 import Job.Track_site.models.User;
 import Job.Track_site.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -31,5 +30,16 @@ public class UserController {
       } catch (RuntimeException e) {
           return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
       }
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
+        try{
+            String token = userService.isValidCredentials(loginDto.getEmail(), loginDto.getPassword());
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        }catch (InvalidCredentials e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        }
+
     }
 }
