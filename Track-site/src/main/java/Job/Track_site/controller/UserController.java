@@ -42,4 +42,14 @@ public class UserController {
         }
 
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token){
+        try{
+            String message = userService.verifyEmail(token);
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }catch(RuntimeException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

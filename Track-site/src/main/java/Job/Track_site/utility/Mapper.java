@@ -13,6 +13,7 @@ public class Mapper {
       User user = new User();
       user.setName(userDto.getName());
       user.setEmail(userDto.getEmail());
+      user.setPassword(userDto.getPassword());
       return user;
     }
 
