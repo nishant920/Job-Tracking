@@ -47,7 +47,7 @@ public class UserService {
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
-        log.info("Token generated on registration of user{}", token);
+        log.info("Token generated on registration of user {}", token);
         verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
         verificationToken.setUser(savedUser);
 
@@ -69,13 +69,14 @@ public class UserService {
         user.setVerified(true);
         userRepository.save(user);
         verificationRepository.delete(verificationToken);
-
         return "Email verified successfully";
     }
 
     public String isValidCredentials(String email, String password){
       User user = userRepository.findByEmail(email);
-
+      if(!user.isVerified()){
+          throw new RuntimeException("Please verify your email first"); //throw the exception in case a user tries to log in without verification
+      }
       if(user.getPassword().equals(password)){
           return jwtUtility.generateToken(user.getEmail(), user.getPassword(), user.getRole());
       }
