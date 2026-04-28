@@ -22,13 +22,15 @@ public class UserService {
     Mapper mapper;
     JwtUtility jwtUtility;
     VerificationRepository verificationRepository;
+    MailService mailService;
 
     public UserService(UserRepository userRepository, Mapper mapper,
-                       JwtUtility jwtUtility, VerificationRepository verificationRepository){
+                       JwtUtility jwtUtility, VerificationRepository verificationRepository, MailService mailService){
         this.userRepository=userRepository;
         this.mapper=mapper;
         this.jwtUtility=jwtUtility;
         this.verificationRepository=verificationRepository;
+        this.mailService=mailService;
     }
 
 
@@ -47,11 +49,12 @@ public class UserService {
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
-        log.info("Token generated on registration of user {}", token);
+        log.info("Token generated on registration of user {} ", token);
         verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
         verificationToken.setUser(savedUser);
 
         verificationRepository.save(verificationToken);
+        mailService.sendVerificationEmail(savedUser.getEmail(), savedUser.getName(), token);
 
         return savedUser;
     }

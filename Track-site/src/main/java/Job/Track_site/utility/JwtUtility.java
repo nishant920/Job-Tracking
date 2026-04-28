@@ -29,7 +29,7 @@ public class JwtUtility {
      */
     public String generateToken(String email, String password, Role  role){
         return Jwts.builder()
-                .setSubject(email) // who the user is
+                .setSubject(email) // who the user is?
                 .claim("role", role) // extra info
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
@@ -37,7 +37,8 @@ public class JwtUtility {
                 .compact();
     }
 
-    /* we use Claims becouse the JWT payload is a structured DATA(JSON)*/
+    /* we use Claims because the JWT payload is a structured DATA(JSON)
+    */
 
    public String verifyJwtToken(String token){
        Claims claims = Jwts.parserBuilder().setSigningKey(secretPass.getBytes()).
