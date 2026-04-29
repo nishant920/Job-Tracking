@@ -27,7 +27,7 @@ public class JwtUtility {
       the library checks your secret. If your secretPass is too short (e.g., only 4 characters),
       the new version will actually throw an error and refuse to start
      */
-    public String generateToken(String email, String password, Role  role){
+    public String generateToken(String email, Role  role){
         return Jwts.builder()
                 .setSubject(email) // who the user is?
                 .claim("role", role) // extra info

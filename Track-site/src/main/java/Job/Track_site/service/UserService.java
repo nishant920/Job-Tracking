@@ -75,13 +75,17 @@ public class UserService {
         return "Email verified successfully";
     }
 
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
     public String isValidCredentials(String email, String password){
       User user = userRepository.findByEmail(email);
       if(!user.isVerified()){
           throw new RuntimeException("Please verify your email first"); //throw the exception in case a user tries to log in without verification
       }
       if(user.getPassword().equals(password)){
-          return jwtUtility.generateToken(user.getEmail(), user.getPassword(), user.getRole());
+          return jwtUtility.generateToken(user.getEmail(), user.getRole());
       }
       throw new InvalidCredentials("Email or password is wrong");
     }
