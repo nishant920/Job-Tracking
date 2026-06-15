@@ -11,5 +11,4 @@ public class CompanyDto {
 
     private String name;
     private String location;
-    private List<Job> jobs;
 }

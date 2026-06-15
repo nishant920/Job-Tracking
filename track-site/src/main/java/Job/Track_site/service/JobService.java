@@ -1,31 +1,56 @@
 package Job.Track_site.service;
 
 import Job.Track_site.dto.JobDto;
+import Job.Track_site.dto.JobResponceDto;
 import Job.Track_site.dto.JobStatusDto;
+import Job.Track_site.models.Company;
 import Job.Track_site.models.Job;
 import Job.Track_site.models.User;
+import Job.Track_site.repository.CompanyRepository;
 import Job.Track_site.repository.JobRepository;
 import Job.Track_site.utility.Mapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class JobService {
     JobRepository jobRepository;
     Mapper mapper;
+    CompanyRepository companyRepository;
 
-    public JobService(JobRepository jobRepository, Mapper mapper){
+    public JobService(JobRepository jobRepository, Mapper mapper, CompanyRepository companyRepository){
         this.jobRepository =jobRepository;
         this.mapper=mapper;
+        this.companyRepository=companyRepository;
     }
- public Job createJob(JobDto jobDto){
+ public JobResponceDto createJob(JobDto jobDto){
+        String companyName = jobDto.getCompany().getName();
+        Company company = companyRepository.findByName(companyName);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Job job = mapper.mapJobDtoTOJob(jobDto);
+
+        if(company == null){
+            company = mapper.mapCompanyDtoTOCompany(jobDto.getCompany());
+            companyRepository.save(company);
+        }
+        Job job = mapper.mapJobDtoTOJob(jobDto, company);
         job.setUser(user);
-        return jobRepository.save(job);
- }
+        jobRepository.save(job);
+        /*Now we need to set company in Job
+        * 1> if the company alredy exixts in the database we map it to current job
+        * 2>  */
+        JobResponceDto jobResponceDto = mapper.jobToJobResponceDto(job);
+        return jobResponceDto;
+    }
+
+
 
  public Job updateStatus(Long id, JobStatusDto jobStatusDto){
     Job job = jobRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found")); // not using findById(id).orElse(null) becouse it will give null vales if no Job not

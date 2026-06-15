@@ -20,8 +20,9 @@ public class Job {
     private User user;
     @Column(nullable = false)
     private String profile;
-    @Column(nullable = false)
-    private String company;
+    @ManyToOne
+    @JoinColumn(name ="company_id")
+    private Company company;
     @Column(nullable = false)
     private Double salary;
 
@@ -34,5 +35,4 @@ public class Job {
 
     private String platform; //Linkedin, Naukri, Indeed
     private LocalDate appliedDate;
-
 }
