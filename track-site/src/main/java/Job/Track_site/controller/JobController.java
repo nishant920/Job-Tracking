@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/job")
 public class JobController {
@@ -32,5 +34,16 @@ public class JobController {
         Job updatedJob = jobService.updateStatus(id, jobStatusDto);
         return new ResponseEntity<>(updatedJob, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getJobByProfile(@RequestParam(name = "profile") String profile){
+
+            List<JobResponceDto> jobResponceDtos = jobService.getAllJobByProfile(profile);
+                 if(jobResponceDtos.isEmpty()) {
+                    throw  new RuntimeException("Job Profile is not found");
+                }
+            return new ResponseEntity<>(jobResponceDtos, HttpStatus.OK);
+
+            }
 
 }

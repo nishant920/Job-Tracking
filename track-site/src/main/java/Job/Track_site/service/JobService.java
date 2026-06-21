@@ -59,6 +59,20 @@ public class JobService {
      return jobRepository.save(job);
  }
 
+ public List<JobResponceDto> getAllJobByProfile(String profile){
+
+        List<Job> jobs = jobRepository.findByProfile(profile);
+
+        List<JobResponceDto> jobResponceDtos = new ArrayList<>();
+
+        for(Job job : jobs) {
+            JobResponceDto dto = mapper.jobToJobResponceDto(job);
+            jobResponceDtos.add(dto);
+        }
+        return jobResponceDtos;
+
+ }
+
 }
 
 /*

@@ -36,7 +36,7 @@ public class MailService {
         verification_link is the variable name.
         templateEngine.process(...) opens User-Verification-mail.html.
         Thymeleaf replaces matching placeholders.
-        result becomes final HTML email conten
+        result becomes final HTML email content
         */
         Context context = new Context();
         context.setVariable("name", userName);
