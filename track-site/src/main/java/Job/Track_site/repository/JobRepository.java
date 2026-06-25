@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface JobRepository extends JpaRepository<Job, Long> {
 
     List<Job> findByProfile(String profile); //don't need optional here as list never  null if not found instead it is empty list
+
+    List<Job> findByUserIdAndProfile(Long userId, String profile);
 }

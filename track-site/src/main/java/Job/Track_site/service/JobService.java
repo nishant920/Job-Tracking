@@ -61,7 +61,14 @@ public class JobService {
 
  public List<JobResponceDto> getAllJobByProfile(String profile){
 
-        List<Job> jobs = jobRepository.findByProfile(profile);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null){
+            throw new RuntimeException("User is not authenticated");
+        }
+        User user = (User) authentication.getPrincipal();
+
+        List<Job> jobs = jobRepository.findByUserIdAndProfile(user.getId(), profile);
 
         List<JobResponceDto> jobResponceDtos = new ArrayList<>();
 
@@ -72,6 +79,8 @@ public class JobService {
         return jobResponceDtos;
 
  }
+
+
 
 }
 
