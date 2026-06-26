@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +51,19 @@ public class JobService {
 
 
  public Job updateStatus(Long id, JobStatusDto jobStatusDto){
-    Job job = jobRepository.findById(id).orElseThrow(() -> new RuntimeException("Job not found")); // not using findById(id).orElse(null) becouse it will give null vales if no Job not
 
+     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+     if(authentication == null){
+         throw new RuntimeException("User is not authenticated");
+     }
+     User user = (User) authentication.getPrincipal();
+
+    Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new RuntimeException("Job not found")); // not using findById(id).orElse(null) becouse it will give null vales if no Job not
+
+     if (jobStatusDto.getStatus() == null) {
+         throw new RuntimeException("Job status is required");
+     }
      job.setStatus(jobStatusDto.getStatus());//and throw nullpointerexeption here becouse null is allowed Blindly calling methods on null is not in java(look in codex)
      return jobRepository.save(job);
  }
