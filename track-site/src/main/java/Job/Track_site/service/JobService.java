@@ -1,7 +1,7 @@
 package Job.Track_site.service;
 
 import Job.Track_site.dto.JobDto;
-import Job.Track_site.dto.JobResponceDto;
+import Job.Track_site.dto.JobResponseDto;
 import Job.Track_site.dto.JobStatusDto;
 import Job.Track_site.models.Company;
 import Job.Track_site.models.Job;
@@ -27,7 +27,7 @@ public class JobService {
         this.mapper=mapper;
         this.companyRepository=companyRepository;
     }
- public JobResponceDto createJob(JobDto jobDto){
+ public JobResponseDto createJob(JobDto jobDto){
         String companyName = jobDto.getCompany().getName();
         Company company = companyRepository.findByName(companyName);
 
@@ -44,8 +44,8 @@ public class JobService {
         /*Now we need to set company in Job
         * 1> if the company alredy exixts in the database we map it to current job
         * 2>  */
-        JobResponceDto jobResponceDto = mapper.jobToJobResponceDto(job);
-        return jobResponceDto;
+        JobResponseDto jobResponseDto = mapper.jobToJobResponceDto(job);
+        return jobResponseDto;
     }
 
 
@@ -68,7 +68,7 @@ public class JobService {
      return jobRepository.save(job);
  }
 
- public List<JobResponceDto> getAllJobByProfile(String profile){
+ public List<JobResponseDto> getAllJobByProfile(String profile){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -79,13 +79,13 @@ public class JobService {
 
         List<Job> jobs = jobRepository.findByUserIdAndProfile(user.getId(), profile);
 
-        List<JobResponceDto> jobResponceDtos = new ArrayList<>();
+        List<JobResponseDto> jobResponseDtos = new ArrayList<>();
 
         for(Job job : jobs) {
-            JobResponceDto dto = mapper.jobToJobResponceDto(job);
-            jobResponceDtos.add(dto);
+            JobResponseDto dto = mapper.jobToJobResponceDto(job);
+            jobResponseDtos.add(dto);
         }
-        return jobResponceDtos;
+        return jobResponseDtos;
 
  }
 

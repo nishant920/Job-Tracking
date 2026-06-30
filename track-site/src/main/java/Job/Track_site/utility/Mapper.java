@@ -39,12 +39,12 @@ public class Mapper {
     }
 
 
-    public JobResponceDto jobToJobResponceDto(Job job) {
-        JobResponceDto jobResponceDto = new JobResponceDto();
-        jobResponceDto.setCompanyName(job.getCompany().getName());
-        jobResponceDto.setStatus(job.getStatus());
-        jobResponceDto.setAppliedDate(job.getAppliedDate());
-        jobResponceDto.setSalary(job.getSalary());
-        return jobResponceDto;
+    public JobResponseDto jobToJobResponceDto(Job job) {
+        JobResponseDto jobResponseDto = new JobResponseDto();
+        jobResponseDto.setCompanyName(job.getCompany().getName());
+        jobResponseDto.setStatus(job.getStatus());
+        jobResponseDto.setAppliedDate(job.getAppliedDate());
+        jobResponseDto.setSalary(job.getSalary());
+        return jobResponseDto;
     }
 }

@@ -34,6 +34,11 @@ public class AuthFilter extends OncePerRequestFilter {
 
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+            /*
+            This request has no JWT token. I will not authenticate it here.
+            Let the next filters decide whether this endpoint is allowed
+            That is important because some endpoints may be public
+            * */
             return;
         }
         try {

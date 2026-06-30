@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class JobResponceDto {
+public class JobResponseDto {
     LocalDate appliedDate;
     String companyName;
     Status status;

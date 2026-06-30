@@ -1,9 +1,8 @@
 package Job.Track_site.controller;
 
 import Job.Track_site.dto.JobDto;
-import Job.Track_site.dto.JobResponceDto;
+import Job.Track_site.dto.JobResponseDto;
 import Job.Track_site.dto.JobStatusDto;
-import Job.Track_site.enums.Status;
 import Job.Track_site.models.Job;
 import Job.Track_site.service.JobService;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,8 @@ public class JobController {
      so to fix this I need to add JWT token based login so that only user can save job in the database and user_id feild dosen't set as null */
     @PostMapping("/save")
     public ResponseEntity<?> createJob(@RequestBody JobDto jobDto){
-      JobResponceDto jobResponceDto =jobService.createJob(jobDto);
-      return new ResponseEntity<>(jobResponceDto, HttpStatus.CREATED);
+      JobResponseDto jobResponseDto =jobService.createJob(jobDto);
+      return new ResponseEntity<>(jobResponseDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/status")
@@ -38,11 +37,11 @@ public class JobController {
     @GetMapping("/search")
     public ResponseEntity<?> getJobByProfile(@RequestParam(name = "profile") String profile){
 
-            List<JobResponceDto> jobResponceDtos = jobService.getAllJobByProfile(profile);
-                 if(jobResponceDtos.isEmpty()) {
+            List<JobResponseDto> jobResponseDtos = jobService.getAllJobByProfile(profile);
+                 if(jobResponseDtos.isEmpty()) {
                     throw  new RuntimeException("Job Profile is not found");
                 }
-            return new ResponseEntity<>(jobResponceDtos, HttpStatus.OK);
+            return new ResponseEntity<>(jobResponseDtos, HttpStatus.OK);
 
             }
 
