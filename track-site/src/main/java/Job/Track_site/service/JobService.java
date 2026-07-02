@@ -89,6 +89,20 @@ public class JobService {
 
  }
 
+ public void deleteJobById(Long id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null){
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        User user = (User) authentication.getPrincipal();
+
+        Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new RuntimeException("No job mapped to user"));
+
+        jobRepository.delete(job);
+ }
+
 
 
 }

@@ -43,8 +43,14 @@ public class JobController {
                 }
             return new ResponseEntity<>(jobResponseDtos, HttpStatus.OK);
 
-            }
-
-
-
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteByID(@PathVariable Long id){
+       try{
+           jobService.deleteJobById(id);
+           return new ResponseEntity<>("Job is Deleted succesfully", HttpStatus.OK);
+       } catch (RuntimeException e) {
+           throw new RuntimeException(e.getMessage());
+       }
+    }
 }
