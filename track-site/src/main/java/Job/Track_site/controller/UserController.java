@@ -32,7 +32,7 @@ public class UserController {
       }
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
         try{
             String token = userService.isValidCredentials(loginDto.getEmail(), loginDto.getPassword());
@@ -40,8 +40,6 @@ public class UserController {
         }catch (InvalidCredentials e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
         }
-
-
     }
 
     @GetMapping("/verify")
