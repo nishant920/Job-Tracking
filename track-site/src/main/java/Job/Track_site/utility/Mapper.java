@@ -12,7 +12,6 @@ public class Mapper {
       User user = new User();
       user.setName(userDto.getName());
       user.setEmail(userDto.getEmail());
-      user.setPassword(userDto.getPassword());
       return user;
     }
 
@@ -46,5 +45,15 @@ public class Mapper {
         jobResponseDto.setAppliedDate(job.getAppliedDate());
         jobResponseDto.setSalary(job.getSalary());
         return jobResponseDto;
+    }
+
+    public UserResponseDto mapUserToUserResponseDto(User user) {
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setVerified(user.isVerified());
+        dto.setRole(user.getRole());
+        return dto;
     }
 }

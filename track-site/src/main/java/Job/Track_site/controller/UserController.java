@@ -3,9 +3,11 @@ package Job.Track_site.controller;
 
 import Job.Track_site.dto.LoginDto;
 import Job.Track_site.dto.UserDto;
+import Job.Track_site.dto.UserResponseDto;
 import Job.Track_site.exceptions.InvalidCredentials;
 import Job.Track_site.models.User;
 import Job.Track_site.service.UserService;
+import Job.Track_site.utility.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +18,20 @@ public class UserController {
 
 
     UserService userService;
+    Mapper mapper;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, Mapper mapper){
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     @PostMapping("/save")
     public ResponseEntity<?> createUser(@RequestBody UserDto userDto){
 
       try {
-          User Saveduser = userService.registerUser(userDto);
-          return new ResponseEntity<>(Saveduser, HttpStatus.CREATED);
+          User savedUser = userService.registerUser(userDto);
+          UserResponseDto responseDto = mapper.mapUserToUserResponseDto(savedUser);
+          return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
       } catch (RuntimeException e) {
           return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
       }

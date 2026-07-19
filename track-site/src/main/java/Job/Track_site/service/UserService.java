@@ -10,6 +10,7 @@ import Job.Track_site.utility.JwtUtility;
 import Job.Track_site.utility.Mapper;
 import Job.Track_site.verification.VerificationToken;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,13 +25,17 @@ public class UserService {
     VerificationRepository verificationRepository;
     MailService mailService;
 
+    PasswordEncoder passwordEncoder;
+
     public UserService(UserRepository userRepository, Mapper mapper,
-                       JwtUtility jwtUtility, VerificationRepository verificationRepository, MailService mailService){
+                       JwtUtility jwtUtility, VerificationRepository verificationRepository, MailService mailService,
+                       PasswordEncoder passwordEncoder){
         this.userRepository=userRepository;
         this.mapper=mapper;
         this.jwtUtility=jwtUtility;
         this.verificationRepository=verificationRepository;
         this.mailService=mailService;
+        this.passwordEncoder=passwordEncoder;
     }
 
 
@@ -44,6 +49,9 @@ public class UserService {
         //set verify false as the email hasn't verified yet
         user.setVerified(false);
         user.setRole(Role.AppUser);
+
+        user.setPassword(passwordEncoder.encode(userDto.getPassword())); //encoding the password for security reason
+
         User savedUser = userRepository.save(user);
         String token = UUID.randomUUID().toString();
 
@@ -81,14 +89,18 @@ public class UserService {
 
     public String isValidCredentials(String email, String password){
       User user = userRepository.findByEmail(email);
-      if(!user.isVerified()){
+
+        if(user == null || !passwordEncoder.matches(password, user.getPassword())){
+            throw new InvalidCredentials("Invalid credentials");
+        }
+
+        if(!user.isVerified()){
           throw new RuntimeException("Please verify your email first"); //throw the exception in case a user tries to log in without verification
-      }
-      if(user.getPassword().equals(password)){
-          return jwtUtility.generateToken(user.getEmail(), user.getRole());
-      }
-      throw new InvalidCredentials("Email or password is wrong");
+        }
+
+      return jwtUtility.generateToken(user.getEmail(), user.getRole());
+
     }
 
-
+ // side note -> matches() extracts the salt and cost factor from the stored hash automatically, hashes the incoming raw password the same way, and compares the two resulting hashes. You never touch the plaintext password again after registration
 }
