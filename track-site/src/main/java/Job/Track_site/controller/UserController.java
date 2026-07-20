@@ -26,34 +26,21 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto){
-
-      try {
-          User savedUser = userService.registerUser(userDto);
-          UserResponseDto responseDto = mapper.mapUserToUserResponseDto(savedUser);
-          return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-      } catch (RuntimeException e) {
-          return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-      }
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserDto userDto){
+        User savedUser = userService.registerUser(userDto);
+        UserResponseDto responseDto = mapper.mapUserToUserResponseDto(savedUser);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
-        try{
-            String token = userService.isValidCredentials(loginDto.getEmail(), loginDto.getPassword());
-            return new ResponseEntity<>(token, HttpStatus.OK);
-        }catch (InvalidCredentials e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+        String token = userService.isValidCredentials(loginDto.getEmail(), loginDto.getPassword());
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<?> verifyEmail(@RequestParam String token){
-        try{
-            String message = userService.verifyEmail(token);
-            return new ResponseEntity<>(message, HttpStatus.OK);
-        }catch(RuntimeException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> verifyEmail(@RequestParam String token){
+        String message = userService.verifyEmail(token);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

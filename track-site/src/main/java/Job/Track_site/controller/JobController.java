@@ -35,22 +35,14 @@ public class JobController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getJobByProfile(@RequestParam(name = "profile") String profile){
-
-            List<JobResponseDto> jobResponseDtos = jobService.getAllJobByProfile(profile);
-                 if(jobResponseDtos.isEmpty()) {
-                    throw  new RuntimeException("Job Profile is not found");
-                }
-            return new ResponseEntity<>(jobResponseDtos, HttpStatus.OK);
-
+    public ResponseEntity<List<JobResponseDto>> getJobByProfile(@RequestParam(name = "profile") String profile){
+        List<JobResponseDto> jobResponseDtos = jobService.getAllJobByProfile(profile);
+        return new ResponseEntity<>(jobResponseDtos, HttpStatus.OK);
     }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteByID(@PathVariable Long id){
-       try{
-           jobService.deleteJobById(id);
-           return new ResponseEntity<>("Job is Deleted succesfully", HttpStatus.OK);
-       } catch (RuntimeException e) {
-           throw new RuntimeException(e.getMessage());
-       }
+    public ResponseEntity<String> deleteByID(@PathVariable Long id){
+        jobService.deleteJobById(id);
+        return new ResponseEntity<>("Job is Deleted succesfully", HttpStatus.OK);
     }
 }

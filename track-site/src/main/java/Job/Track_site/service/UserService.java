@@ -2,7 +2,10 @@ package Job.Track_site.service;
 
 import Job.Track_site.dto.UserDto;
 import Job.Track_site.enums.Role;
+import Job.Track_site.exceptions.BadRequestException;
 import Job.Track_site.exceptions.InvalidCredentials;
+import Job.Track_site.exceptions.ResourceNotFoundException;
+import Job.Track_site.exceptions.UserAlreadyExistsException;
 import Job.Track_site.models.User;
 import Job.Track_site.repository.UserRepository;
 import Job.Track_site.repository.VerificationRepository;
@@ -42,7 +45,7 @@ public class UserService {
     public User registerUser(UserDto userDto){
         User exixtingUser = userRepository.findByEmail(userDto.getEmail());
         if(exixtingUser!=null){
-            throw new RuntimeException("User already exists");
+            throw new UserAlreadyExistsException("User already exists");
         }
 
         User user =  mapper.mapUserDetailsToUser(userDto);
@@ -69,11 +72,11 @@ public class UserService {
 
     public String verifyEmail(String token){
         VerificationToken verificationToken = verificationRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Invalid verification token"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid verification token"));
 
         //if the deadline is earlier than "right now," it means the token is officially expired
         if(verificationToken.getExpiryDate().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("Verification token expired");
+            throw new BadRequestException("Verification token expired");
         }
 
         User user = verificationToken.getUser();
@@ -95,7 +98,7 @@ public class UserService {
         }
 
         if(!user.isVerified()){
-          throw new RuntimeException("Please verify your email first"); //throw the exception in case a user tries to log in without verification
+          throw new BadRequestException("Please verify your email first"); //throw the exception in case a user tries to log in without verification
         }
 
       return jwtUtility.generateToken(user.getEmail(), user.getRole());

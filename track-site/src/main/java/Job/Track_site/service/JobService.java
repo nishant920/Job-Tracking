@@ -3,6 +3,9 @@ package Job.Track_site.service;
 import Job.Track_site.dto.JobDto;
 import Job.Track_site.dto.JobResponseDto;
 import Job.Track_site.dto.JobStatusDto;
+import Job.Track_site.exceptions.BadRequestException;
+import Job.Track_site.exceptions.ResourceNotFoundException;
+import Job.Track_site.exceptions.UnauthorizedException;
 import Job.Track_site.models.Company;
 import Job.Track_site.models.Job;
 import Job.Track_site.models.User;
@@ -55,14 +58,14 @@ public class JobService {
      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
      if(authentication == null){
-         throw new RuntimeException("User is not authenticated");
+         throw new UnauthorizedException("User is not authenticated");
      }
      User user = (User) authentication.getPrincipal();
 
-    Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new RuntimeException("Job not found")); // not using findById(id).orElse(null) becouse it will give null vales if no Job not
+    Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new ResourceNotFoundException("Job not found")); // not using findById(id).orElse(null) becouse it will give null vales if no Job not
 
      if (jobStatusDto.getStatus() == null) {
-         throw new RuntimeException("Job status is required");
+         throw new BadRequestException("Job status is required");
      }
      job.setStatus(jobStatusDto.getStatus());//and throw nullpointerexeption here becouse null is allowed Blindly calling methods on null is not in java(look in codex)
      return jobRepository.save(job);
@@ -73,11 +76,14 @@ public class JobService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null){
-            throw new RuntimeException("User is not authenticated");
+            throw new UnauthorizedException("User is not authenticated");
         }
         User user = (User) authentication.getPrincipal();
 
         List<Job> jobs = jobRepository.findByUserIdAndProfile(user.getId(), profile);
+        if(jobs.isEmpty()) {
+            throw new ResourceNotFoundException("Job Profile is not found");
+        }
 
         List<JobResponseDto> jobResponseDtos = new ArrayList<>();
 
@@ -93,12 +99,12 @@ public class JobService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication == null){
-            throw new RuntimeException("User is not authenticated");
+            throw new UnauthorizedException("User is not authenticated");
         }
 
         User user = (User) authentication.getPrincipal();
 
-        Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new RuntimeException("No job mapped to user"));
+        Job job = jobRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new ResourceNotFoundException("No job mapped to user"));
 
         jobRepository.delete(job);
  }
