@@ -1,14 +1,12 @@
 package Job.Track_site.dto;
 
-import Job.Track_site.models.Job;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-
-import java.util.List;
 
 @Data
 public class CompanyDto {
-
+    @NotBlank(message = "Company name is required")
     private String name;
+
     private String location;
 }
