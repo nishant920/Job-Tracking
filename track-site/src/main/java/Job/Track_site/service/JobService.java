@@ -47,7 +47,7 @@ public class JobService {
         /*Now we need to set company in Job
         * 1> if the company alredy exixts in the database we map it to current job
         * 2>  */
-        JobResponseDto jobResponseDto = mapper.jobToJobResponceDto(job);
+        JobResponseDto jobResponseDto = mapper.mapJobToJobResponseDto(job);
         return jobResponseDto;
     }
 
@@ -88,7 +88,7 @@ public class JobService {
         List<JobResponseDto> jobResponseDtos = new ArrayList<>();
 
         for(Job job : jobs) {
-            JobResponseDto dto = mapper.jobToJobResponceDto(job);
+            JobResponseDto dto = mapper.mapJobToJobResponseDto(job);
             jobResponseDtos.add(dto);
         }
         return jobResponseDtos;

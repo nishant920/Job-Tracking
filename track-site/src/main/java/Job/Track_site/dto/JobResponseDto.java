@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class JobResponseDto {
+    Long id;
     LocalDate appliedDate;
     String companyName;
     Status status;

@@ -5,6 +5,7 @@ import Job.Track_site.dto.JobResponseDto;
 import Job.Track_site.dto.JobStatusDto;
 import Job.Track_site.models.Job;
 import Job.Track_site.service.JobService;
+import Job.Track_site.utility.Mapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,11 @@ import java.util.List;
 @RequestMapping("api/v1/job")
 public class JobController {
     JobService jobService;
-    public JobController(JobService jobService){
+    Mapper mapper;
+
+    public JobController(JobService jobService, Mapper mapper){
         this.jobService=jobService;
+        this.mapper=mapper;
     }
 
    /* this saves the Job in the database
@@ -30,9 +34,10 @@ public class JobController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Job> updateJobStatus(@PathVariable Long id, @Valid @RequestBody JobStatusDto jobStatusDto){
+    public ResponseEntity<JobResponseDto> updateJobStatus(@PathVariable Long id, @Valid @RequestBody JobStatusDto jobStatusDto){
         Job updatedJob = jobService.updateStatus(id, jobStatusDto);
-        return new ResponseEntity<>(updatedJob, HttpStatus.OK);
+        JobResponseDto responseDto = mapper.mapJobToJobResponseDto(updatedJob);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @GetMapping("/search")

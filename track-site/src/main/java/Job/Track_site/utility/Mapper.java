@@ -38,8 +38,9 @@ public class Mapper {
     }
 
 
-    public JobResponseDto jobToJobResponceDto(Job job) {
+    public JobResponseDto mapJobToJobResponseDto(Job job) {
         JobResponseDto jobResponseDto = new JobResponseDto();
+        jobResponseDto.setId(job.getId());
         jobResponseDto.setCompanyName(job.getCompany().getName());
         jobResponseDto.setStatus(job.getStatus());
         jobResponseDto.setAppliedDate(job.getAppliedDate());
