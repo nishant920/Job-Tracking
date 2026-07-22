@@ -5,8 +5,10 @@ JobTrack is a Spring Boot REST API for recording and managing job applications. 
 ## Features
 
 - User registration and email verification
-- Stateless JWT authentication
-- Create, search, and update job applications
+- Stateless JWT authentication with BCrypt password hashing
+- Input validation on requests (e.g. email formats, required fields)
+- Centralized global exception handling with standardized JSON error payloads
+- Create, search, update, and delete job applications
 - Track companies, salaries, skills, platforms, and application dates
 - PostgreSQL persistence with Spring Data JPA
 - HTML verification emails rendered with Thymeleaf
@@ -39,15 +41,19 @@ Maven does not need to be installed separately because the project includes the 
 CREATE DATABASE "job-track";
 ```
 
-The default development configuration connects with:
+The default configuration connects using environment variables for secrets:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/job-track
-spring.datasource.username=postgres
-spring.datasource.password=postgres
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+jwt.secret.password=${JWT_SECRET}
+spring.mail.username=${MAIL_USERNAME}
+spring.mail.password=${MAIL_PASSWORD}
+app.base.url=${APP_BASE_URL}
 ```
 
-Change these values in `track-site/src/main/resources/application.properties` if your setup differs.
+Ensure these are set in your environment variables before running the application.
 
 ### 2. Configure email
 
@@ -56,15 +62,6 @@ Set the credentials in PowerShell:
 ```powershell
 $env:MAIL_USERNAME="your-email@example.com"
 $env:MAIL_PASSWORD="your-app-password"
-```
-
-Add the SMTP settings required by your provider to `application.properties`. A typical Gmail configuration is:
-
-```properties
-spring.mail.host=smtp.gmail.com
-spring.mail.port=587
-spring.mail.properties.mail.smtp.auth=true
-spring.mail.properties.mail.smtp.starttls.enable=true
 ```
 
 Use an app password or provider-specific SMTP credential.
@@ -117,6 +114,17 @@ Content-Type: application/json
 }
 ```
 
+Response is a sanitized user object without the password hash (`UserResponseDto`):
+```json
+{
+  "id": 1,
+  "name": "Nisha",
+  "email": "nisha@example.com",
+  "verified": false,
+  "role": "AppUser"
+}
+```
+
 ### Verify email
 
 ```http
@@ -127,10 +135,8 @@ This route is normally opened through the verification email.
 
 ### Log in
 
-The current implementation accepts the login body on a `GET` request:
-
 ```http
-GET /api/v1/user/login
+POST /api/v1/user/login
 Content-Type: application/json
 ```
 
@@ -141,7 +147,7 @@ Content-Type: application/json
 }
 ```
 
-The response body contains the JWT.
+The response body contains the JWT token.
 
 ### Create a job application
 
@@ -192,6 +198,30 @@ Content-Type: application/json
 }
 ```
 
+### Delete job application
+
+```http
+DELETE /api/v1/job/delete/{id}
+Authorization: Bearer <your-jwt>
+```
+
+## Error Handling & Validation
+
+Centralized error handling wraps all validation errors, authentication failures, and bad request parameters in a standard JSON format:
+
+```json
+{
+  "error": "Validation Failed",
+  "message": "email: Please provide a valid email address",
+  "timestamp": "2026-07-21T01:30:00"
+}
+```
+
+## Endpoint Testing (IDE Friendly)
+
+The project includes an [api-tests.http](file:///c:/Users/nisha/OneDrive/Desktop/jobtrack-project/track-site/api-tests.http) file in the root of the `track-site` directory.
+- Open this file in IntelliJ Ultimate (built-in HTTP Client) or install the free **RestfulTool** plugin in IntelliJ Community to run requests directly from the IDE window without needing Postman.
+
 ## Tests
 
 Run tests from the `track-site` directory:
@@ -204,15 +234,11 @@ Use `./mvnw test` on macOS or Linux.
 
 ## Configuration notes
 
-- Hibernate uses `spring.jpa.hibernate.ddl-auto=update`.
+- Hibernate uses `spring.jpa.hibernate.ddl-auto=update` in development.
 - The server port is `7070`.
 - `jwt.expiration.time` controls token lifetime.
 - `app.base.url` is used to build verification links.
-- Move the database password and JWT secret out of `application.properties` before deployment.
 
 ## Current limitations
 
-- Passwords are currently compared as plain text; add password hashing before production use.
-- Login uses `GET` with a request body; `POST` is better supported by HTTP clients.
-- A delete method exists in the controller but is not mapped to an HTTP route.
 - Automated test coverage is currently minimal.
