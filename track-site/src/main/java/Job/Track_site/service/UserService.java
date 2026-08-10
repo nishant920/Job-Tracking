@@ -15,6 +15,7 @@ import Job.Track_site.verification.VerificationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -86,6 +87,32 @@ public class UserService {
         return "Email verified successfully";
     }
 
+    @Transactional
+    public String resendVerification(String email){
+        User user = findByEmail(email);
+        if(user == null){
+            throw new BadRequestException("user not found");
+        }
+
+        if(user.isVerified()){
+            throw new BadRequestException("email is already verified, you can log-in directly");
+        }
+
+        verificationRepository.deleteByUserId(user.getId());
+
+        String token = UUID.randomUUID().toString();
+
+        VerificationToken verificationToken = new VerificationToken();
+
+        verificationToken.setToken(token);
+        verificationToken.setExpiryDate(LocalDateTime.now().plusMinutes(30));
+        verificationToken.setUser(user);
+
+        mailService.sendVerificationEmail(email, user.getName(), token);
+
+        log.info("Resent Verification token {} to user {}", token, email);
+        return "Verification email send, please check your mail";
+    }
     public User findByEmail(String email){
         return userRepository.findByEmail(email);
     }

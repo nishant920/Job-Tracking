@@ -44,4 +44,10 @@ public class UserController {
         String message = userService.verifyEmail(token);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+
+    @GetMapping("/verify/resend")
+    public ResponseEntity<String> resendVerification(@RequestParam("email") String email){
+        String message = userService.resendVerification(email);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 }
