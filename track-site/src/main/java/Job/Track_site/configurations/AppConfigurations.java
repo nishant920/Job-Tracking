@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.client.RestTemplate;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.Properties;
@@ -36,5 +38,15 @@ public class AppConfigurations {
         props.put("mail.smtp.starttls.enable", "true");// This property we are setting for secure connection
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         return javaMailSender;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
     }
 }

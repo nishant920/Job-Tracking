@@ -52,9 +52,4 @@ public class JobController {
         return new ResponseEntity<>("Job is Deleted succesfully", HttpStatus.OK);
     }
 
-    @GetMapping("/question")
-    public void getInterviewQuestions(@RequestParam String profile){
-
-    }
-
 }

@@ -23,7 +23,7 @@ public class AuthConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/user/save", "/api/v1/user/login", "/api/v1/user/verify").permitAll()
-                        .requestMatchers("/api/v1/job/**").authenticated()
+                        .requestMatchers("/api/v1/job/**", "/api/v1/ai/generate/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
