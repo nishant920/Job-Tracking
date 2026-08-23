@@ -37,7 +37,8 @@ public class JwtUtility {
                 .compact();
     }
 
-    /* we use Claims because the JWT payload is a structured DATA(JSON)
+    /*
+    we use Claims because the JWT payload is a structured DATA(JSON)
     */
 
    public String verifyJwtToken(String token){
