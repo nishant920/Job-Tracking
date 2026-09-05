@@ -16,6 +16,7 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
@@ -29,13 +30,24 @@ public class AiService {
         this.objectMapper = objectMapper;
     }
 
+    private final Map<String, List<String>> questionCache = new ConcurrentHashMap<>();
+
     @Value("${gemini.api-key}")
     private String geminiApiKey;
 
     /*Inside your getQuestions method, we need to build the prompt string that we will send to Gemini.
     We will customize it depending on whether the user provided a company name or years of experience.*/
-    public List<String> getQuestions(InterviewQuestionDto questionDto){
 
+    //-----------------------------------------caching check------------------------------------------------------------
+    public List<String> getQuestions(InterviewQuestionDto questionDto){
+        String cacheKey = questionDto.getProfile().toLowerCase();
+
+        if(questionCache.containsKey(cacheKey)){
+            log.info("Cache hit for profile: {}", cacheKey);
+            return questionCache.get(cacheKey);
+        }
+
+        log.info("Manual Cache MISS for profile: {}. Calling Gemini API...", cacheKey);
 //---------------------------------------------PROMPT GENERATION--------------------------------------------------------
         String profile = questionDto.getProfile();
         //start with base prompt
@@ -110,8 +122,13 @@ public class AiService {
                 /*When to Use (String) Cast > Use the explicit cast when you are certain the object is a String and a null value is acceptable or expected
                 * When to Use .toString() > Use the method call when you want to convert any object into text and you know the object is never null*/
                 String rawText = (String) parts.get(0).get("text");
+                List<String> questions = objectMapper.readValue(rawText, new TypeReference<List<String>>() {});
 
-                return objectMapper.readValue(rawText, new TypeReference<List<String>>() {});
+                if(questions!=null && !questions.isEmpty()){
+                    questionCache.put(cacheKey, questions);
+                }
+
+                return questions;
 
             }
             throw new RuntimeException("Empty response body from Gemini API");
@@ -219,4 +236,9 @@ why try catch instead of global exception handling
  while a global exception handler is a safety net for fallback actions and application stability
 -> As a general rule of thumb, you should only catch an exception locally if you can actually fix it or add meaningful context to it.
  Otherwise, you should let it bubble up to the global handler.
+
+ Why final? (Reference Immutability & Thread Safety)
+Prevents Reassignment: The final keyword guarantees that the variable reference can never be reassigned to null or replaced with another map object after initialization.
+. Why private? (Encapsulation & Security )
+Encapsulation (OOP Principle): The cache belongs only to AiService. Outside classes (like UserController or JobService) have no business touching or viewing the internal cache memory.
 }*/
