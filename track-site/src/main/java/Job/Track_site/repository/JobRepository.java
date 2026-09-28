@@ -3,6 +3,8 @@ package Job.Track_site.repository;
 import Job.Track_site.models.Job;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByUserIdAndProfile(Long userId, String profile);
 
     Optional<Job> findByIdAndUserId(Long id, Long userId);
+
+    @Query("SELECT j.status, COUNT(j) FROM Job j WHERE j.user.id = :userId GROUP BY j.status")
+    List<Object[]> countJobsByStatusForUser(@Param("userId") Long userId);
 }

@@ -2,7 +2,9 @@ package Job.Track_site.service;
 
 import Job.Track_site.dto.JobDto;
 import Job.Track_site.dto.JobResponseDto;
+import Job.Track_site.dto.JobStatsDto;
 import Job.Track_site.dto.JobStatusDto;
+import Job.Track_site.enums.Status;
 import Job.Track_site.exceptions.BadRequestException;
 import Job.Track_site.exceptions.ResourceNotFoundException;
 import Job.Track_site.exceptions.UnauthorizedException;
@@ -109,7 +111,47 @@ public class JobService {
         jobRepository.delete(job);
  }
 
+ public JobStatsDto getJobStats() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null) {
+            throw new UnauthorizedException("User is not authenticated");
+        }
+
+        User user = (User) authentication.getPrincipal();
+
+        List<Object[]> results = jobRepository.countJobsByStatusForUser(user.getId());
+
+        long applied = 0;
+        long interviewed = 0;
+        long rejected = 0;
+        long offer = 0;
+        long noResponse = 0;
+        long total = 0;
+
+        for (Object[] row : results) {
+            Status status = (Status) row[0];
+            long count = ((Number) row[1]).longValue();
+            total += count;
+
+            switch (status) {
+                case APPLIED -> applied = count;
+                case INTERVIEWED -> interviewed = count;
+                case REJECTED -> rejected = count;
+                case OFFER -> offer = count;
+                case NO_RESPONSE -> noResponse = count;
+            }
+        }
+
+        return JobStatsDto.builder()
+                .total(total)
+                .applied(applied)
+                .interviewed(interviewed)
+                .rejected(rejected)
+                .offer(offer)
+                .noResponse(noResponse)
+                .build();
+ }
 
 }
 

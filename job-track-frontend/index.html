@@ -3,73 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Tracker - Login & Sign Up</title>
+  <title>Job Tracker Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <header class="app-header">
+  <header class="topbar">
+    <div>
       <h1>Job Tracker</h1>
-      <p>Keep track of your job applications and stay organized.</p>
-    </header>
-
-    <div class="form-toggle">
-      <button type="button" id="showSigninBtn" class="active">Sign In</button>
-      <button type="button" id="showSignupBtn">Sign Up</button>
+      <p>Manage your applications from one clean dashboard.</p>
     </div>
 
-    <section id="signinSection" class="form-section">
-      <h2>Sign In</h2>
-      <form id="signinForm" action="#" method="POST">
-        <div class="form-group">
-          <label for="signinEmail">Email Address</label>
-          <input type="email" id="signinEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
-        </div>
+    <div class="topbar-actions">
+      <span id="loginStatus" class="login-status">Not signed in</span>
+      <button type="button" id="logoutBtn" class="secondary-button is-hidden">Logout</button>
+    </div>
+  </header>
 
-        <div class="form-group">
-          <label for="signinPassword">Password</label>
-          <input type="password" id="signinPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
-        </div>
+  <main class="page-layout">
+    <section id="authSection" class="panel auth-panel">
+      <div class="form-toggle">
+        <button type="button" id="showSigninBtn" class="active">Sign In</button>
+        <button type="button" id="showSignupBtn">Sign Up</button>
+      </div>
 
-        <div class="form-group checkbox-group">
-          <input type="checkbox" id="rememberMe" name="rememberMe">
-          <label for="rememberMe">Remember me</label>
-        </div>
+      <section id="signinSection" class="form-section">
+        <h2>Sign In</h2>
+        <form id="signinForm" action="#" method="POST">
+          <div class="form-group">
+            <label for="signinEmail">Email Address</label>
+            <input type="email" id="signinEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
+          </div>
 
-        <button type="submit">Sign In</button>
-        <p id="signinMessage" class="form-message" aria-live="polite"></p>
-      </form>
+          <div class="form-group">
+            <label for="signinPassword">Password</label>
+            <input type="password" id="signinPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <label for="rememberMe">Remember me</label>
+          </div>
+
+          <button type="submit">Sign In</button>
+          <p id="signinMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="signupSection" class="form-section is-hidden">
+        <h2>Create Account</h2>
+        <form id="signupForm" action="#" method="POST">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" name="name" placeholder="Enter your full name" autocomplete="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" name="password" placeholder="Create a password" autocomplete="new-password" minlength="6" required>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" minlength="6" required>
+          </div>
+
+          <button type="submit">Create Account</button>
+          <p id="signupMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
     </section>
 
-    <section id="signupSection" class="form-section is-hidden">
-      <h2>Create Account</h2>
-      <form id="signupForm" action="#" method="POST">
-        <div class="form-group">
-          <label for="signupName">Full Name</label>
-          <input type="text" id="signupName" name="name" placeholder="Enter your full name" autocomplete="name" required>
+    <section class="dashboard">
+      <section class="stats-grid" aria-label="Application summary">
+        <article class="stat-card">
+          <span>Total</span>
+          <strong id="totalCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Applied</span>
+          <strong id="appliedCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Interviewed</span>
+          <strong id="interviewedCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Offers</span>
+          <strong id="offerCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Rejected</span>
+          <strong id="rejectedCount">0</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Add Job</h2>
+            <p id="addJobHint">Sign in to add a job application.</p>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="signupEmail">Email Address</label>
-          <input type="email" id="signupEmail" name="email" placeholder="Enter your email" autocomplete="email" required>
+        <form id="jobForm" class="job-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="profile">Profile</label>
+              <input type="text" id="profile" placeholder="Backend Developer" required>
+            </div>
+
+            <div class="form-group">
+              <label for="companyName">Company</label>
+              <input type="text" id="companyName" placeholder="Example Corp" required>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" placeholder="Bengaluru">
+            </div>
+
+            <div class="form-group">
+              <label for="salary">Salary</label>
+              <input type="number" id="salary" min="0" placeholder="1200000" required>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select id="status" required>
+                <option value="APPLIED">Applied</option>
+                <option value="INTERVIEWED">Interviewed</option>
+                <option value="OFFER">Offer</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="NO_RESPONSE">No Response</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="experience">Experience</label>
+              <input type="number" id="experience" min="0" placeholder="2">
+            </div>
+
+            <div class="form-group">
+              <label for="platform">Platform</label>
+              <input type="text" id="platform" placeholder="LinkedIn">
+            </div>
+
+            <div class="form-group">
+              <label for="appliedDate">Applied Date</label>
+              <input type="date" id="appliedDate">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="skillSet">Skills</label>
+            <input type="text" id="skillSet" placeholder="Java, Spring Boot, PostgreSQL">
+          </div>
+
+          <button type="submit" id="addJobBtn">Add Job</button>
+          <p id="jobMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Applications</h2>
+            <p>Search by profile to view and manage matching jobs.</p>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="signupPassword">Password</label>
-          <input type="password" id="signupPassword" name="password" placeholder="Create a password" autocomplete="new-password" minlength="6" required>
-        </div>
+        <form id="searchForm" class="search-row">
+          <input type="search" id="searchProfile" placeholder="Search profile, e.g. Backend Developer" required>
+          <button type="submit">Search</button>
+        </form>
 
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" minlength="6" required>
-        </div>
-
-        <button type="submit">Create Account</button>
-        <p id="signupMessage" class="form-message" aria-live="polite"></p>
-      </form>
+        <p id="searchMessage" class="form-message" aria-live="polite"></p>
+        <div id="jobsList" class="jobs-list"></div>
+      </section>
     </section>
-  </div>
+  </main>
 
-  <script src="script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

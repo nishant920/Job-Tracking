@@ -2,7 +2,9 @@ package Job.Track_site.controller;
 
 import Job.Track_site.dto.JobDto;
 import Job.Track_site.dto.JobResponseDto;
+import Job.Track_site.dto.JobStatsDto;
 import Job.Track_site.dto.JobStatusDto;
+import Job.Track_site.enums.Status;
 import Job.Track_site.models.Job;
 import Job.Track_site.service.JobService;
 import Job.Track_site.utility.Mapper;
@@ -52,4 +54,32 @@ public class JobController {
         return new ResponseEntity<>("Job is Deleted succesfully", HttpStatus.OK);
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<JobStatsDto> getJobStats(){
+        JobStatsDto stats = jobService.getJobStats();
+        return new ResponseEntity<>(stats, HttpStatus.OK);
+    }
 }
+/*
+ ResponseDto
+ -> int totalJobs by user
+ -> int appliedJobs
+ -> int rejected
+ -> int offer
+ -> int interviewed
+
+ JobService {
+
+    public ResponseDto getJobsCount(){
+           Authentication authentication = SpringSecurityHolder.getContext().getAutentication();
+
+           Object principal = authentication.getPrincipal();
+
+           if(!principal.instanceOf(user)){
+
+           }
+    }
+
+ }
+
+ */
