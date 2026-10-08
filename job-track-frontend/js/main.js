@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
   const authSection = document.getElementById('authSection');
   const loginStatus = document.getElementById('loginStatus');
+  const loginToggleBtn = document.getElementById('loginToggleBtn');
   const logoutBtn = document.getElementById('logoutBtn');
 
   const signinBtn = document.getElementById('showSigninBtn');
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI({
       authSection,
       loginStatus,
+      loginToggleBtn,
       logoutBtn,
       addJobBtn,
       addJobHint,
@@ -71,6 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
   signupBtn.addEventListener('click', () =>
     showSignupForm({ signinBox, signupBox, signinBtn, signupBtn, signinMessage })
   );
+
+  if (loginToggleBtn) {
+    loginToggleBtn.addEventListener('click', () => {
+      authSection.classList.toggle('is-hidden');
+      document.querySelector('.page-layout')?.classList.toggle('auth-visible', !authSection.classList.contains('is-hidden'));
+      if (!authSection.classList.contains('is-hidden')) {
+        showSigninForm({ signinBox, signupBox, signinBtn, signupBtn, signupMessage });
+        authSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
 
   // Sign In Handler
   signinForm.addEventListener('submit', async (e) => {
@@ -132,7 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
   jobForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!isLoggedIn()) {
-      showMessage(jobMessage, 'Please sign in before adding a job.', 'error');
+      authSection.classList.remove('is-hidden');
+      document.querySelector('.page-layout')?.classList.add('auth-visible');
+      showSigninForm({ signinBox, signupBox, signinBtn, signupBtn, signupMessage });
+      showMessage(signinMessage, 'Please sign in or create an account to save your job.', 'error');
+      showMessage(jobMessage, 'Sign in required to save job application.', 'error');
+      authSection.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 

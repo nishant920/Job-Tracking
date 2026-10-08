@@ -8,6 +8,7 @@ export function showMessage(element, message, type = '') {
 export function updateAuthUI({
   authSection,
   loginStatus,
+  loginToggleBtn,
   logoutBtn,
   addJobBtn,
   addJobHint,
@@ -17,15 +18,22 @@ export function updateAuthUI({
     loginStatus.textContent = 'Signed in';
     authSection.classList.add('is-hidden');
     logoutBtn.classList.remove('is-hidden');
+    if (loginToggleBtn) loginToggleBtn.classList.add('is-hidden');
     addJobBtn.disabled = false;
     addJobHint.textContent = 'Add a new application to your tracker.';
   } else {
     loginStatus.textContent = 'Not signed in';
-    authSection.classList.remove('is-hidden');
+    authSection.classList.add('is-hidden'); // Hidden by default when not logged in
     logoutBtn.classList.add('is-hidden');
-    addJobBtn.disabled = true;
-    addJobHint.textContent = 'Sign in to add a job application.';
+    if (loginToggleBtn) loginToggleBtn.classList.remove('is-hidden');
+    addJobBtn.disabled = false; // Enabled so user can attempt to add a job
+    addJobHint.textContent = 'Fill in the details to add an application.';
     if (onSignedOut) onSignedOut();
+  }
+
+  const layout = authSection?.closest('.page-layout');
+  if (layout) {
+    layout.classList.toggle('auth-visible', !authSection.classList.contains('is-hidden'));
   }
 }
 

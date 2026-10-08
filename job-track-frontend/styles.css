@@ -65,9 +65,15 @@ button {
   width: min(1180px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 1fr;
   gap: 22px;
   align-items: start;
+}
+
+/* When auth panel is visible, switch to 2-column layout (Auth Sidebar + Dashboard) */
+.page-layout:has(#authSection:not(.is-hidden)),
+.page-layout.auth-visible {
+  grid-template-columns: 360px 1fr;
 }
 
 .dashboard {
