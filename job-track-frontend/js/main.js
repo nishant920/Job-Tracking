@@ -5,7 +5,8 @@ import {
   saveJobApi,
   searchJobsApi,
   updateJobStatusApi,
-  deleteJobApi
+  deleteJobApi,
+  fetchAllJobsApi
 } from './api.js';
 import {
   showMessage,
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         signinForm.reset();
         showMessage(signinMessage, 'Signed in successfully.', 'success');
         handleAuthUI();
+        await loadUserJobs();
       } else {
         showMessage(signinMessage, data || 'Login failed.', 'error');
       }
@@ -242,6 +244,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Load all jobs for authenticated user
+  async function loadUserJobs() {
+    if (isLoggedIn()) {
+      try {
+        const { ok, data } = await fetchAllJobsApi();
+        if (ok && Array.isArray(data)) {
+          jobs = data;
+          refreshJobList();
+        }
+      } catch (err) {
+        console.error('Failed to load user jobs:', err);
+      }
+    }
+  }
+
   // Initialize Page on load
   handleAuthUI();
+  loadUserJobs();
 });

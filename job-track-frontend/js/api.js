@@ -82,3 +82,15 @@ export async function fetchJobStatsApi() {
   }
   return { ok: false, data: null };
 }
+
+export async function fetchAllJobsApi() {
+  const response = await fetch(`${JOB_API}/all`, {
+    method: 'GET',
+    headers: getAuthHeaders()
+  });
+  if (response.ok) {
+    const data = await response.json();
+    return { ok: true, data };
+  }
+  return { ok: false, data: [] };
+}

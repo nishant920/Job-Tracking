@@ -94,7 +94,26 @@ public class JobService {
             jobResponseDtos.add(dto);
         }
         return jobResponseDtos;
+ }
 
+ public List<JobResponseDto> getAllJobs() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            throw new UnauthorizedException("User is not authenticated");
+        }
+
+        User user = (User) authentication.getPrincipal();
+
+        List<Job> jobs = jobRepository.findByUserIdOrderByIdDesc(user.getId());
+        List<JobResponseDto> jobResponseDtos = new ArrayList<>();
+
+        for (Job job : jobs) {
+            JobResponseDto dto = mapper.mapJobToJobResponseDto(job);
+            jobResponseDtos.add(dto);
+        }
+
+        return jobResponseDtos;
  }
 
  public void deleteJobById(Long id){

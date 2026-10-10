@@ -19,6 +19,8 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     Optional<Job> findByIdAndUserId(Long id, Long userId);
 
+    List<Job> findByUserIdOrderByIdDesc(Long userId);
+
     @Query("SELECT j.status, COUNT(j) FROM Job j WHERE j.user.id = :userId GROUP BY j.status")
     List<Object[]> countJobsByStatusForUser(@Param("userId") Long userId);
 }

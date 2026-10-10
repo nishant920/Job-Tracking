@@ -59,6 +59,12 @@ public class JobController {
         JobStatsDto stats = jobService.getJobStats();
         return new ResponseEntity<>(stats, HttpStatus.OK);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<JobResponseDto>> getAllJobs(){
+        List<JobResponseDto> jobs = jobService.getAllJobs();
+        return new ResponseEntity<>(jobs, HttpStatus.OK);
+    }
 }
 /*
  ResponseDto
