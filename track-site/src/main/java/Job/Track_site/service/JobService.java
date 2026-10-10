@@ -32,7 +32,7 @@ public class JobService {
         this.mapper=mapper;
         this.companyRepository=companyRepository;
     }
- public JobResponseDto createJob(JobDto jobDto){
+ public JobResponseDto  createJob(JobDto jobDto){
         String companyName = jobDto.getCompany().getName();
         Company company = companyRepository.findByName(companyName);
 

@@ -84,6 +84,7 @@ export function renderJobs(jobs, jobsList, { onStatusChange, onDelete }) {
     addMetaText(jobMeta, `Status: ${job.status}`);
     addMetaText(jobMeta, `Salary: ${job.salary}`);
     addMetaText(jobMeta, `Applied: ${job.appliedDate || 'Not added'}`);
+    addMetaText(jobMeta, `Profile: ${job.profile}`);
 
     jobInfo.append(companyName, jobMeta);
 
