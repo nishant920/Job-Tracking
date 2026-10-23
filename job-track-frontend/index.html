@@ -188,7 +188,23 @@
       </section>
     </section>
   </main>
-
+  <!-- AI Generated Question -->
+  <div id="aiModal" class="ai-modal is-hidden" role="dialog" aria-modal="true">
+    <div class="ai-modal-backdrop" id="aiModalBackdrop"></div>
+        
+    <div class="ai-modal-content">
+      <!-- 1. Header with title and close button -->
+      <div class="ai-modal-header">
+        <h3 id="aiModalTitle">AI Interview Prep</h3>
+        <button type="button" id="closeAiModalBtn" class="close-btn">&times;</button>
+      </div>
+      <!-- 2. Status & Error indicators -->
+      <p id="aiLoadingMessage" class="ai-loading is-hidden">Generating questions with AI, please wait...</p>
+      <p id="aiErrorMessage" class="form-message error is-hidden"></p>
+      <!-- 3. The container where JavaScript inserts the questions -->
+      <ol id="aiQuestionsList" class="ai-questions-list"></ol>
+    </div>
+  </div>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -368,3 +368,106 @@ button[type="submit"]:disabled {
     width: 100%;
   }
 }
+
+/*AI MODAL*/
+.ai-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ai-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  -webkit-backdrop-filter: blur(2px); /* Safari support */
+  backdrop-filter: blur(2px);
+}
+
+.ai-modal-content {
+  position: relative;
+  z-index: 1001;
+  background: #ffffff;
+  border-radius: 12px;
+  width: min(650px, 100%);
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.ai-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.ai-modal-header h3 {
+  font-size: 1.15rem;
+  color: #0f172a;
+}
+
+.close-btn {
+  background: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.close-btn:hover {
+  background: #f1f5f9;
+  color: #ee0a0a;
+}
+
+.ai-loading {
+  color: #1314147c;
+  font-weight: 600;
+  padding: 12px 0;
+}
+
+/* Scrollable container for the 10 questions */
+.ai-questions-list {
+  overflow-y: auto;
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-questions-list li {
+  color: #334155;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+.ai-prep-button {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #8b5cf6;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.ai-prep-button:hover {
+  background: #7c3aed;
+}
+
+.ai-prep-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

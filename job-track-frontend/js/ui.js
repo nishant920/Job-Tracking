@@ -61,7 +61,7 @@ export function updateStats(jobs) {
   document.getElementById('rejectedCount').textContent = jobs.filter(j => j.status === 'REJECTED').length;
 }
 
-export function renderJobs(jobs, jobsList, { onStatusChange, onDelete }) {
+export function renderJobs(jobs, jobsList, { onStatusChange, onDelete, onAiPrep}) {
   jobsList.innerHTML = '';
   updateStats(jobs);
 
@@ -77,6 +77,15 @@ export function renderJobs(jobs, jobsList, { onStatusChange, onDelete }) {
     const jobInfo = document.createElement('div');
     const companyName = document.createElement('h3');
     const jobMeta = document.createElement('div');
+
+    /* Interview questions */
+    const aiButton = document.createElement('button');
+    aiButton.type = 'button';
+    aiButton.className = 'ai-prep-button';
+    aiButton.textContent = 'Frequent Questions for this role';
+    aiButton.addEventListener('click', () => {
+      if (onAiPrep) onAiPrep(job);
+    });
 
     companyName.textContent = job.companyName;
     jobMeta.className = 'job-meta';
@@ -104,7 +113,7 @@ export function renderJobs(jobs, jobsList, { onStatusChange, onDelete }) {
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', () => onDelete(job.id));
 
-    jobActions.append(statusSelect, deleteButton);
+    jobActions.append(statusSelect, deleteButton, aiButton);
     jobCard.append(jobInfo, jobActions);
     jobsList.appendChild(jobCard);
   });

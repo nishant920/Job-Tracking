@@ -6,7 +6,8 @@ import {
   searchJobsApi,
   updateJobStatusApi,
   deleteJobApi,
-  fetchAllJobsApi
+  fetchAllJobsApi,
+  generateInterviewQuestionsApi
 } from './api.js';
 import {
   showMessage,
@@ -43,12 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const addJobBtn = document.getElementById('addJobBtn');
   const addJobHint = document.getElementById('addJobHint');
   const jobsList = document.getElementById('jobsList');
+  // Ai Modal
+  const aiModal = document.getElementById('aiModal');
+  const aiModalBackdrop = document.getElementById('aiModalBackdrop');
+  const closeAiModalBtn = document.getElementById('closeAiModalBtn');
+  const aiModalTitle = document.getElementById('aiModalTitle');
+  const aiLoadingMessage = document.getElementById('aiLoadingMessage');
+  const aiErrorMessage = document.getElementById('aiErrorMessage');
+  const aiQuestionsList = document.getElementById('aiQuestionsList');
 
   // Helper to re-render jobs with active callbacks
   function refreshJobList() {
     renderJobs(jobs, jobsList, {
       onStatusChange: handleStatusChange,
-      onDelete: handleDeleteJob
+      onDelete: handleDeleteJob,
+      onAiPrep: handleAiPrep
     });
   }
 
@@ -259,6 +269,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function closeAiModal() {
+    aiModal.classList.add('is-hidden');
+  }
+  closeAiModalBtn.addEventListener('click', closeAiModal);
+  aiModalBackdrop.addEventListener('click', closeAiModal);
+
+  async function handleAiPrep(job) {
+    if(!isLoggedIn()){
+      alert("Please sign-in to generate Questions.")
+      return;
+    }
+
+    // 1. Open modal & set title
+    aiModal.classList.remove('is-hidden');
+    aiQuestionsList.innerHTML = '';
+    aiModalTitle.textContent = `Interview Prep: ${job.profile || 'Role'} at ${job.companyName || 'Company'}`;
+    aiErrorMessage.classList.add('is-hidden');
+    aiLoadingMessage.classList.remove('is-hidden');
+
+    try {
+      // 3. Call your backend API
+      const { ok, data } = await generateInterviewQuestionsApi({
+        profile: job.profile,
+        companyName: job.companyName,
+        experience: job.experience
+      });
+
+      aiLoadingMessage.classList.add('is-hidden');
+      if(ok && Array.isArray(data)){
+        data.forEach(questions => {
+          const li = document.createElement('li');
+          li.textContent = questions;
+          aiQuestionsList.appendChild(li);
+        })
+      }else{
+        // Show rate limit or backend error
+        aiErrorMessage.textContent = data || 'Failed to generate questions. Please try again.';
+        aiErrorMessage.classList.remove('is-hidden');
+      }
+  } catch(err){
+      aiLoadingMessage.classList.add('is-hidden');
+      aiErrorMessage.textContent = 'Could not connect to AI service.';
+      aiErrorMessage.classList.remove('is-hidden');
+  }
+}
   // Initialize Page on load
   handleAuthUI();
   loadUserJobs();

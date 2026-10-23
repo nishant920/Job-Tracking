@@ -1,4 +1,4 @@
-import { USER_API, JOB_API } from './config.js';
+import { USER_API, JOB_API, AI_API } from './config.js';
 import { getAuthHeaders } from './auth.js';
 
 export async function loginApi(email, password) {
@@ -93,4 +93,18 @@ export async function fetchAllJobsApi() {
     return { ok: true, data };
   }
   return { ok: false, data: [] };
+}
+
+export async function generateInterviewQuestionsApi({ profile, companyName, experience }) {
+  const response = await fetch(`${AI_API}/interview-questions`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({profile, companyName, experience})
+  });
+  if(response.ok){
+  const data = await response.json();
+  return{ok: true, data}
+  }
+  const errorText = await response.json();
+  return {ok: false, errorText};
 }
