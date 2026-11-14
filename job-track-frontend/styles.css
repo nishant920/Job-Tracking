@@ -440,7 +440,7 @@ button[type="submit"]:disabled {
 /* Scrollable container for the 10 questions */
 .ai-questions-list {
   overflow-y: auto;
-  padding-left: 20px;
+  padding-left: 25px;
   margin: 0;
   display: flex;
   flex-direction: column;

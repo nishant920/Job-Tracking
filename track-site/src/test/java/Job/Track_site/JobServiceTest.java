@@ -50,6 +50,9 @@ public class JobServiceTest {
         jobStatusDto.setStatus(Status.INTERVIEWED);
 
         when(jobRepository.findByIdAndUserId(1L, 5L)).thenReturn(Optional.of(job));
-        when()
+        when(jobRepository.save(job)).thenReturn(job);
+
+        Job updatedJob = jobService.updateStatus(1L, jobStatusDto);
+        org.junit.jupiter.api.Assertions.assertEquals(Status.INTERVIEWED, updatedJob.getStatus());
     }
 }

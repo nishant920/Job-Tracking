@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: jobtrack-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: job-track
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d job-track"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./track-site
+      dockerfile: Dockerfile
+    container_name: jobtrack-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-7070}:7070"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/job-track
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:7070}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      PORT: 7070
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

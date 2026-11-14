@@ -8,6 +8,7 @@ import Job.Track_site.service.RateLimitingService;
 import io.github.bucket4j.Bucket;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("api/v1/ai/generate")
 public class AiController {
@@ -43,6 +45,7 @@ public class AiController {
             //It returns a boolean
              boolean tokenConsumed = bucket.tryConsume(1);
             if (!tokenConsumed) {
+                log.info("hit hourly limit for generating question");
                 throw new BadRequestException("Rate limit exceeded! You can only generate AI questions 5 times per hour.");
             }
 

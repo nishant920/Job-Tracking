@@ -56,12 +56,12 @@ public class AiService {
 
         //add company if present
         if(questionDto.getCompanyName() != null && !questionDto.getCompanyName().isBlank()){
-            prompt.append(String.format("Tailer the Question to specific %s", questionDto.getCompanyName()));
+            prompt.append(String.format("Tailer the Question to specific %s ", questionDto.getCompanyName()));
         }
 
         //add experince if present
-        if(questionDto.getExperience() != null){
-            prompt.append(String.format("Target candidate experience level: %d years.", questionDto.getExperience()));
+        if(questionDto.getExperience() != null && questionDto.getExperience()!=0){
+            prompt.append(String.format("Target candidate experience level: %d years. ", questionDto.getExperience()));
         }
 
         String finalPrompt = prompt.toString();
