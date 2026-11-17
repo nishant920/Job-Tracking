@@ -9,6 +9,7 @@ export function updateAuthUI({
   authSection,
   loginStatus,
   loginToggleBtn,
+  topDemoBtn,
   logoutBtn,
   addJobBtn,
   addJobHint,
@@ -19,6 +20,7 @@ export function updateAuthUI({
     authSection.classList.add('is-hidden');
     logoutBtn.classList.remove('is-hidden');
     if (loginToggleBtn) loginToggleBtn.classList.add('is-hidden');
+    if (topDemoBtn) topDemoBtn.classList.add('is-hidden');
     addJobBtn.disabled = false;
     addJobHint.textContent = 'Add a new application to your tracker.';
   } else {
@@ -26,6 +28,7 @@ export function updateAuthUI({
     authSection.classList.add('is-hidden'); // Hidden by default when not logged in
     logoutBtn.classList.add('is-hidden');
     if (loginToggleBtn) loginToggleBtn.classList.remove('is-hidden');
+    if (topDemoBtn) topDemoBtn.classList.remove('is-hidden');
     addJobBtn.disabled = false; // Enabled so user can attempt to add a job
     addJobHint.textContent = 'Fill in the details to add an application.';
     if (onSignedOut) onSignedOut();

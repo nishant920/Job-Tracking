@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginStatus = document.getElementById('loginStatus');
   const loginToggleBtn = document.getElementById('loginToggleBtn');
   const logoutBtn = document.getElementById('logoutBtn');
+  const topDemoBtn = document.getElementById('topDemoBtn');
+  const fillDemoBtn = document.getElementById('fillDemoBtn');
 
   const signinBtn = document.getElementById('showSigninBtn');
   const signupBtn = document.getElementById('showSignupBtn');
@@ -67,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       authSection,
       loginStatus,
       loginToggleBtn,
+      topDemoBtn,
       logoutBtn,
       addJobBtn,
       addJobHint,
@@ -76,6 +79,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Demo Login Helper
+  function loginWithDemo() {
+    if (authSection.classList.contains('is-hidden')) {
+      authSection.classList.remove('is-hidden');
+      document.querySelector('.page-layout')?.classList.add('auth-visible');
+      showSigninForm({ signinBox, signupBox, signinBtn, signupBtn, signupMessage });
+    }
+    document.getElementById('signinEmail').value = 'demo@jobtrack.com';
+    document.getElementById('signinPassword').value = 'demo1234';
+    signinForm.dispatchEvent(new Event('submit'));
+  }
+
+  if (topDemoBtn) topDemoBtn.addEventListener('click', loginWithDemo);
+  if (fillDemoBtn) fillDemoBtn.addEventListener('click', loginWithDemo);
 
   // Toggle Forms
   signinBtn.addEventListener('click', () =>

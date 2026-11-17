@@ -471,3 +471,57 @@ button[type="submit"]:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Demo Account UI */
+.demo-topbar-button {
+  padding: 9px 13px;
+  border: 1.5px solid #f59e0b;
+  border-radius: 9px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.demo-topbar-button:hover {
+  background: #fde68a;
+  transform: translateY(-1px);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 12px 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+.demo-button {
+  width: 100%;
+  padding: 11px;
+  border: 1.5px dashed #f59e0b;
+  border-radius: 9px;
+  background: #fffbeb;
+  color: #b45309;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.demo-button:hover {
+  background: #fef3c7;
+  border-color: #d97706;
+}
