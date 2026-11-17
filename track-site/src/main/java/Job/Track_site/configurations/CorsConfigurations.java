@@ -14,7 +14,7 @@ import java.util.List;
 @Configuration
 public class CorsConfigurations {
 
-    @Value("${ALLOWED_ORIGINS:http://localhost:*,http://127.0.0.1:*}")
+    @Value("${ALLOWED_ORIGINS:http://localhost:*,http://127.0.0.1:*,https://*.onrender.com}")
     private String allowedOrigins;
 
     @Bean
